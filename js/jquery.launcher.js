@@ -31,7 +31,7 @@
             $anchors.each(function(index, value) {
                 $foo[index] = {
                     label: $(value).text(), 
-                    href: $(value).attr('href')
+                    elm: $(value)
                     };
             });
         
@@ -39,11 +39,17 @@
            
 	$(function() {
 		$launcherTextField.autocomplete({
-			minLength: 0,
+			minLength: 2,
 			source: $foo,
 			select: function( event, ui ) {
-				location.href=ui.item.href;
-				return false;
+                elm = ui.item.elm;
+                
+                if(elm.attr('onclick')) {
+                    elm.click();
+                } else {
+                    window.location = elm.attr('href');
+                }
+                return false;
 			}
 		})
 		.data( "autocomplete" )._renderItem = function( ul, item ) {
@@ -53,6 +59,12 @@
 				.appendTo( ul );
 		};
 	});
+
+    shortcut.add('Ctrl+Space', function(){
+        $launcherWrapper.toggle();
+        $launcherTextField.focus();
+    });
+    
 	
                       
         
